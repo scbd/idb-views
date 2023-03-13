@@ -8,11 +8,11 @@ const css = []
 const callingImportMetaUrl = import.meta.url
 
 /*** DEV RELEASE */
-const cdnUrl = 'https://scbd-components.s3.amazonaws.com'; // only required for releaseing to dev
+const cdnUrl = 'https://scbd-components.s3.amazonaws.com'; // only required for releasing to dev
 
-new WidgetBuilder({ Package, css, callingImportMetaUrl }, { cdnUrl, buildWidget: DB_WIDGET_BUILD, buildWidgetMount: DB_WIDGET_MOUNT_BUILD, buildWidgetTest: DB_WIDGET_TEST_BUILD }) // vite automagic global const replace TEST_WIDGET_BUILD TEST_WIDGET_MOUNT_BUILD
+new WidgetBuilder({ Package, css, callingImportMetaUrl }, { cdnUrl }) 
 /*** DEV RELEASE */
 
 /*** PROD RELEASE */
-//new WidgetBuilder({ Package, css, callingImportMetaUrl }, { buildWidget: DB_WIDGET_BUILD, buildWidgetMount: DB_WIDGET_MOUNT_BUILD, buildWidgetTest: DB_WIDGET_TEST_BUILD }) // vite automagic global const replace TEST_WIDGET_BUILD TEST_WIDGET_MOUNT_BUILD
+//new WidgetBuilder({ Package, css, callingImportMetaUrl }) 
 /*** PROD RELEASE */
