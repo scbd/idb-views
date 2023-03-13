@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Widget Preview</title>
+  </head>
+  <body>
+
+    <script 
+      id   = "widget-scbd-ibd-views"
+      type = "module"
+      src  = "http://localhost:5000/preview/widget/index.js?123"
+      options = "{ 
+                    debug      : true,
+                    baseApiUrl : 'https://api.cbddev.xyz/api',
+                    accountsUrl: 'https://accounts.cbddev.xyz',
+                    year       : 2023,
+                    view       : 'IdbMessagesAdmin',
+                    order      : [ { 'name': 'Headliner', 'identifier': 'headliner', 'adminOnly': 'true' }, { 'name': 'COP Presidency', 'identifier': 'cop-presidencies' }, { 'identifier': '8830904C-8AF4-4C2F-AADB-363D98D854DA', 'name': 'Government agency (National/Federal)' }, { 'identifier': '692b3eb1-a00c-437d-8903-d9b7714a7514', 'name': 'UN and other specialized agency of the UN Common System' }, { 'identifier': '1C3A4FF4-9AB7-4A34-BE06-E07F575B7A32', 'name': 'Government agency (Sub-national)' }, { 'identifier': 'EC872EB8-02B0-46E7-AAB0-C79AC629356A', 'name': 'Indigenous peoples and local communities (IPLC)' }, { 'identifier': '64432E86-23C9-4D9A-B835-962D8221E6CA', 'name': 'Inter-governmental organization (IGO)' } ],
+                    editUrl    : 'https://rjh.bioland.cbddev.xyz/about'
+                  }"> 
+  </script>
+
+  </body>
+</html>
