@@ -98,37 +98,3 @@ async function getAuth(){
 
   return { headers, ...auth.$state }
 }
-
-
-
-
-async function $getUser(){
-  await isTokenLoaded()
-
-  const   me                             = await getUser()
-  const { FirstName, LastName, Country } = await getProfile(me.userID)
-  
-  const firstName = FirstName
-  const lastName  = LastName
-  const country   = Country
-
-  globalProps.Vue.nextTick(() => globalProps.me.set({ ...me, firstName, lastName, country }))
-
-  return globalProps.me
-}
-
-function $logOut(){
-  globalProps.me.logOut()
-  globalProps.auth.logOut()
-
-  if(!globalProps.el) return
-  
-  const msg = JSON.stringify({ type: 'setAuthenticationToken', authenticationToken: null, authenticationEmail: null, expiration: null })
-
-  globalProps.el.contentWindow.postMessage(msg, globalProps.auth.accountsUrl)
-
-  setTimeout(() => {
-    globalProps.auth.dispatchUser(globalProps.el, this.me)
-    this.$root.$emit('$me', this.me)
-  }, 1500)
-}

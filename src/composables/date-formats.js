@@ -1,18 +1,18 @@
 import { DateTime } from 'luxon';
 
 export function metaFormat(dateString){
-    if(!DateTime.fromISO(dateString, { zone: 'utc' }).isValid) return '';
+    if(!DateTime.fromISO(dateString).isValid) return '';
 
-    return  DateTime.fromISO(dateString, { zone: 'utc' }).toFormat('yyyy-LL-dd');
+    return  DateTime.fromISO(dateString).toFormat('yyyy-LL-dd');
 }
 
 export function dtFormat({ startDate, endDate, locality }){
     const cityText = locality? `, ${locality.en}` : '';
-    const start    = DateTime.fromISO(startDate, { zone: 'utc' });
+    const start    = DateTime.fromISO(startDate);
 
     if(!endDate) return start.toFormat('dd LLL yyyy') + cityText;
 
-    const end         = DateTime.fromISO(endDate, { zone: 'utc' });
+    const end         = DateTime.fromISO(endDate);
     const hasSameYear = start.hasSame(end, 'year') 
 ;
     const hasSameMonthYear = hasSameYear && start.hasSame(end, 'month');
