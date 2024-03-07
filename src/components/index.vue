@@ -45,6 +45,11 @@ const checkAuth =  (user) => async (mutation) => {
   const me = useMeStore();
 
   user.value = await me.getUser();
+
+  if(user.value?.userID && user.value.userID !== 1) return;
+
+  setTimeout(async ()=>user.value = await me.getUser(), 500);
+  setTimeout(async ()=>user.value = await me.getUser(), 1500);
 }
 
 
