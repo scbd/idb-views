@@ -13,54 +13,53 @@
       <h3 v-if="globalList.length" class="global">{{ t('Global celebrations and more') }}</h3>
       <ul>
         <li v-for="(globalDoc,index) in  globalList" v-bind:key="index" class="mb-3">
-          <a :href="`${options.countryBaseUrl}/global#${globalDoc._id}`">{{ t(globalDoc.name) }}</a>
+          <a :href="`${options.countryBaseUrl}/global#${globalDoc._id}`">{{ t(globalDoc.name) }}</a> 
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a v-if="options.editUrl && isAdmin" :href="`${options.editUrl}?identifier=${globalDoc._id}`" target="_blank"  rel="noopener noreferrer">
+                        <Icon name="edit" />
+                    </a>
         </li>
       </ul>
     </div>
   </div>
 </template>
 
-<script>
-import { toRef, ref     } from 'vue-demi';
+<script setup>
+import { toRef, ref, defineProps     } from 'vue';
 import { listDocuments  } from '@/composables/api.js';
 import { getData        } from '@scbd-chm/cached-apis';
 import   t                from '@/composables/i18n.js';
 import   Loading          from '@/components/Loading.vue';
+import   isAdmin      from '@/composables/is-admin.js';
+import   Icon       from '@/components/Icon.vue';
 
-export default {
-  name      : 'IdbActionsCountries',
-  components: { Loading },
-  props     : { options : { type: Object, required: true } },
-  setup
-}
+const   props      = defineProps( { options : { type: Object, required: true } });
+const   options    = toRef(props, 'options');
 
-function setup(props){
-  const   isLoading      = ref(true);
-  const   globalList     = ref([]);
-  const   countryList    = ref([]);
-  const   options        = toRef(props, 'options');
+const   isLoading      = ref(true);
+const   globalList     = ref([]);
+const   countryList    = ref([]);
 
 
-  getCountryList().then((countries)=> { 
+getCountryList().then((countries)=> { 
     countryList.value = countries;
-    setTimeout(() => {isLoading.value = !isLoading.value }, 1000);
+    setTimeout(() => { isLoading.value = !isLoading.value }, 1000);
   })
 
-  getGlobalList().then((globalDocs)=> globalList.value  = globalDocs);
-
-  return { t, countryList,  globalList, options, isLoading };
-}
+getGlobalList().then((globalDocs)=> globalList.value = globalDocs);
 
 async function getCountryList(){
   const rawCountries                  = await getData('countries');
   const allDocuments                  = await listDocuments({ 'isGlobal.identifier': { $exists: false } },{ 'address.country.identifier': 1 });
   const allDocumentCountryIdentifiers = (allDocuments.map(({ address })=> address?.country?.identifier)).filter(x => x);
+  const countriesWithActions          = rawCountries.filter(({ identifier }) => allDocumentCountryIdentifiers.includes(identifier));
 
-  for (const country of rawCountries) {
+
+  for (const country of countriesWithActions) {
       country.count = 0;
       
       for (const countryIdentifier of allDocumentCountryIdentifiers )
-        if(country.identifier === countryIdentifier);
+        if(country.identifier === countryIdentifier)
           country.count++;
   }
 
@@ -72,4 +71,5 @@ async function getGlobalList(){
 
   return globalDocuments;
 }
+
 </script>
