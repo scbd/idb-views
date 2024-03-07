@@ -1,4 +1,4 @@
-import      { createApp   } from 'vue-demi'
+import      { createApp   } from 'vue'
 import      { createI18n  } from 'vue-i18n'
 import      { createPinia } from 'pinia'
 import App, { i18n        } from '@/index'
@@ -36,12 +36,13 @@ const order   = [
 ]
 
 const options = { 
-                    view       : 'idbMessagesAdmin',//'IdbActionsCountries',
+                    view       : 'IdbMessages',//'IdbActionsCountries',
                     country    : 'ca',
                     year       : 2023,
                     baseApiUrl : 'https://api.cbddev.xyz/api',
                     accountsUrl: 'https://accounts.cbddev.xyz',
-                    editUrl    : 'https://rjh.bioland.cbddev.xyz/idb-message',
+                    countryBaseUrl: '',
+                    editUrl    : 'https://www.cbd.int/article/idb-2024-action-form',
                     debug      : true,
                     order
                 }
@@ -52,4 +53,3 @@ anApp.use(createI18n(i18n))
 anApp.use(createPinia())
 
 anApp.mount('#app')
-

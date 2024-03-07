@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import { toRef, ref, unref } from 'vue-demi';
+  import { toRef, ref, unref } from 'vue';
   import { listDocuments     } from '@/composables/api.js';
   import { lookUp            } from '@scbd-chm/cached-apis';
   import   Icon                from '../Icon.vue';

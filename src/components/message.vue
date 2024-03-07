@@ -70,7 +70,7 @@
 </template>
 
 <script>
-    import { toRef  } from 'vue-demi';
+    import { toRef  } from 'vue';
     import   isAdmin  from '@/composables/is-admin.js';
     import   t        from '@/composables/i18n.js';
     import   Icon     from '@/components/Icon.vue';

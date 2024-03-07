@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { toRef         , ref , unref } from 'vue-demi';
+import { toRef         , ref , unref } from 'vue';
 import { listDocuments , postStatus  } from '@/composables/api.js';
 import { dtFormat      , metaFormat  } from '@/composables/date-formats.js';
 import { lookUp                      } from '@scbd-chm/cached-apis';

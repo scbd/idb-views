@@ -7,7 +7,7 @@
 
 <script>
 
-import { toRef, ref, defineAsyncComponent } from 'vue-demi';
+import { toRef, ref, defineAsyncComponent } from 'vue';
 
 import { useI18n            } from 'vue-i18n';
 import { initializeApiStore } from '@scbd-chm/cached-apis';

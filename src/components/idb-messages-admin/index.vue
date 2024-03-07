@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { toRef        , ref, unref } from 'vue-demi';
+import { toRef        , ref, unref } from 'vue';
 import { listDocuments, postStatus } from '@/composables/api.js';
 import { lookUp                    } from '@scbd-chm/cached-apis';
 import { metaFormat                } from '@/composables/date-formats.js';
