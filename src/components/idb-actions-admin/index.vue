@@ -2,7 +2,6 @@
   <div ref="idbActionsAdmin">
     <Loading v-if="isLoading"/>
     <AuthNeeded :options="options"/>
-    
     <div v-if="isAdmin">
       {{ t('Filter') }}:
       <select @change="onChangeFilter($event)" v-model="filter" class="custom-select">
@@ -10,6 +9,10 @@
         <option value="">{{ t('All') }}</option>
         <option value="rejected">{{ t('Rejected') }}</option>
         <option value="published">{{ t('Published') }}</option>
+      </select>
+      Year: 
+      <select @change="onChangeFilter($event)" v-model="selectedYear" class="custom-select">
+        <option v-for="y in years" v-bind:key="y" :value="y">{{ y }}</option>
       </select>
     </div>
     <hr/>
@@ -70,21 +73,26 @@ export default {
 function setup(props){
   const   isLoading      = ref(true);
   const   filter         = ref('request');
+  const   selectedYear   = ref(new Date().getFullYear());
+  const   years          = ref([]);
   const   documents      = ref([]);
   const   options        = toRef(props, 'options');
   const   setUpFunctions = { t, onChangeFilter, changeStatus, isAdmin, dtFormat, metaFormat };
 
-  getActions(filter).then((responseDocs)=> { 
+  for (let year = new Date().getFullYear(); year>=2023 ; year--)
+    years.value.push(year);
+
+  getActions(filter, selectedYear).then((responseDocs)=> { 
     documents.value = responseDocs;
     setTimeout(() => {isLoading.value = !isLoading.value }, 1000);
   });
 
-  return { options, documents, filter, isLoading, ...setUpFunctions };
+  return { years, selectedYear, options, documents, filter, isLoading, ...setUpFunctions };
 }
 
 function onChangeFilter(){
   this.isLoading = true;
-  getActions(this.filter).then((responseDocs)=>  { 
+  getActions(this.filter, this.selectedYear).then((responseDocs)=>  { 
     this.documents = responseDocs;
     setTimeout(() => { this.isLoading = !this.isLoading }, 500);
   });
@@ -102,10 +110,10 @@ async function changeStatus(identifier, status){
   setTimeout(() => { this.isLoading = !this.isLoading }, 500);
 }
 
-async function getActions(filterSelection){
+async function getActions(filterSelection, selectedYear){
   const filterValue                   = unref(filterSelection);
   const filter                        = filterValue? { 'meta.status': filterValue } : {'meta.status': {$ne: 'x'}};
-  const allDocuments                  = await loadCountriesNames(await listDocuments(filter));
+  const allDocuments                  = await loadCountriesNames(await listDocuments(filter,{},unref(selectedYear)));
 
   return allDocuments;
 }

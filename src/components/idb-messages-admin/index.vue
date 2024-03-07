@@ -12,6 +12,10 @@
         <option value="published">{{ t('Published') }} </option>
         <option value="unpublished">{{ t('Unpublished') }}</option>
       </select>
+      Year: 
+      <select @change="onChangeFilter($event)" v-model="selectedYear" class="custom-select">
+        <option v-for="y in years" v-bind:key="y" :value="y">{{ y }}</option>
+      </select>
     </div>
     <hr/>
     <div v-if="isAdmin" >
@@ -89,28 +93,35 @@ const additionalOptions = [
 function setup(props){
   const   isLoading      = ref(true);
   const   filter         = ref('request');
+  const   selectedYear   = ref(new Date().getFullYear());
+  const   years          = ref([]);
   const   documents      = ref([]);
   const   options        = toRef(props, 'options');
   const   setupFunctions = { t, metaFormat, isAdmin, onChangeFilter, changeStatus };
   const   nonOrgs        = [ 'headliner', '8830904C-8AF4-4C2F-AADB-363D98D854DA', 'cop-presidencies' ];
 
-  listDocuments({ 'meta.status': 'request'}).then(async (responseDocs)=>{
+  for (let year = new Date().getFullYear(); year>=2023 ; year--)
+    years.value.push(year);
+  
+  listDocuments({ 'meta.status': 'request'},{},selectedYear.value).then(async (responseDocs)=>{
     documents.value = responseDocs;
 
     return documents;
   }).then(loadCOuntriesNames)
     .then(() => setTimeout(() => {isLoading.value = !isLoading.value }, 1000));
 
-  return { options, documents, nonOrgs, filter, isLoading, ...setupFunctions };
+  return { years, selectedYear, options, documents, nonOrgs, filter, isLoading, ...setupFunctions };
 }
 
 function onChangeFilter($event){
   this.isLoading = true;
   this.documents = [];
-  const value    = $event?.target?.value? $event.target.value : { $ne: 'x'};
+  const value    = this.filter || { $ne: 'x'};
   const q        = { 'meta.status': value  };
 
-  listDocuments(q).then(async (responseDocs)=>{
+
+
+  listDocuments(q,{},this.selectedYear).then(async (responseDocs)=>{
       this.documents = responseDocs;
 
       return this.documents;

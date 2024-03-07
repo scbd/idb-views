@@ -33,10 +33,11 @@ export function cleanNilsClone (obj) {
     return cleanNils(clone(obj));
 }
 
-export const listDocuments = async (query = {}, f={}) => {
+export const listDocuments = async (query = {}, f={}, yearPassed) => {
     try 
         {
-          const { apiUrl, year }  = await getOptions();
+          const { apiUrl, year:optsYear }  = await getOptions();
+          const   year            = yearPassed || optsYear;
           const   headers         = await getAuth();
           const   startYearDate   = DateTime.fromISO(year);
           const   endYearDate     = startYearDate.plus({ year: 1 });
