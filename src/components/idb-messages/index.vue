@@ -3,7 +3,9 @@
     <Loading v-if="isLoading"/>
     <div v-for="({type, docs},index) in documents" v-bind:key="index">
 
-      <h2 v-if="type!='headliner'" class="type-header"> <hr/> {{t(type)}} <hr/> </h2>
+      <hr v-if="type!='headliner' && docs?.length"/>
+      <h2 :id="`type-${type}`" v-if="type!='headliner' && docs?.length" class="type-header">  {{t(type)}}  </h2>
+      <hr v-if="type!='headliner' && docs?.length"/>
 
       <div v-for="(doc,index) in docs" v-bind:key="index">
         <Message :document="doc" :options="options" />
