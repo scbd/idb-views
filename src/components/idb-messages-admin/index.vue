@@ -3,7 +3,7 @@
     <Loading v-if="isLoading"/>
     <AuthNeeded :options="options"/>
     
-    <div v-show="isAdmin">
+    <div v-if="isAdmin">
       Filter: 
       <select @change="onChangeFilter($event)" v-model="filter" class="custom-select">
         <option value="request" selected>{{ t('New') }}</option>
@@ -11,6 +11,10 @@
         <option value="rejected">{{ t('Rejected') }}</option>
         <option value="published">{{ t('Published') }} </option>
         <option value="unpublished">{{ t('Unpublished') }}</option>
+      </select>
+      Year: 
+      <select @change="onChangeFilter($event)" v-model="selectedYear" class="custom-select">
+        <option v-for="y in years" v-bind:key="y" :value="y">{{ y }}</option>
       </select>
     </div>
     <hr/>
@@ -48,7 +52,7 @@
 </template>
 
 <script>
-import { toRef        , ref, unref } from 'vue-demi';
+import { toRef        , ref, unref } from 'vue';
 import { listDocuments, postStatus } from '@/composables/api.js';
 import { lookUp                    } from '@scbd-chm/cached-apis';
 import { metaFormat                } from '@/composables/date-formats.js';
@@ -56,7 +60,7 @@ import { metaFormat                } from '@/composables/date-formats.js';
 import Icon       from '../Icon.vue';
 import Message    from '@/components/message.vue';
 import AuthNeeded from '@/components/authorization-needed.vue';
-import isAdmin    from '@/composables/is-admin.js';
+import isAdmin, {isAdminFunction}     from '@/composables/is-admin.js';
 import t          from '@/composables/i18n.js';
 import Loading    from '@/components/Loading.vue';
 
@@ -64,7 +68,7 @@ export default {
   name      : 'IdbMessagesAdmin',
   components: { Icon,  Message, Loading, AuthNeeded },
   props     : { options : { type: Object, required: true } },
-  setup
+  setup, mounted
 }
 
 const additionalOptions = [
@@ -89,33 +93,41 @@ const additionalOptions = [
 function setup(props){
   const   isLoading      = ref(true);
   const   filter         = ref('request');
+  const   selectedYear   = ref(new Date().getFullYear());
+  const   years          = ref([]);
   const   documents      = ref([]);
   const   options        = toRef(props, 'options');
   const   setupFunctions = { t, metaFormat, isAdmin, onChangeFilter, changeStatus };
   const   nonOrgs        = [ 'headliner', '8830904C-8AF4-4C2F-AADB-363D98D854DA', 'cop-presidencies' ];
 
-  listDocuments({ 'meta.status': 'request'}).then(async (responseDocs)=>{
+  isAdminFunction();
+  for (let year = new Date().getFullYear(); year>=2023 ; year--)
+    years.value.push(year);
+  
+  listDocuments({ 'meta.status': 'request'},{},selectedYear.value).then(async (responseDocs)=>{
     documents.value = responseDocs;
 
     return documents;
   }).then(loadCOuntriesNames)
-    .then(() => setTimeout(() => {isLoading.value = !isLoading.value }, 1000));
+    .then(() => setTimeout(() => {isLoading.value = false }, 1000));
 
-  return { options, documents, nonOrgs, filter, isLoading, ...setupFunctions };
+  return { years, selectedYear, options, documents, nonOrgs, filter, isLoading, ...setupFunctions };
 }
 
 function onChangeFilter($event){
   this.isLoading = true;
   this.documents = [];
-  const value    = $event?.target?.value? $event.target.value : { $ne: 'x'};
+  const value    = this.filter || { $ne: 'x'};
   const q        = { 'meta.status': value  };
 
-  listDocuments(q).then(async (responseDocs)=>{
+
+
+  listDocuments(q,{},this.selectedYear).then(async (responseDocs)=>{
       this.documents = responseDocs;
 
       return this.documents;
     }).then(loadCOuntriesNames)
-    .then(()=> setTimeout(() => { this.isLoading = !this.isLoading }, 500));
+    .then(()=> setTimeout(() => { this.isLoading = false }, 500));
 }
 
 async function changeStatus(identifier, status){
@@ -126,11 +138,11 @@ async function changeStatus(identifier, status){
   const value = this.filter? this.filter : { $ne: 'x'}
   const q     = { 'meta.status': value }
 
-  listDocuments(q).then(async (responseDocs)=>{
+  listDocuments(q,{},this.selectedYear).then(async (responseDocs)=>{
       this.documents = responseDocs
 
       return this.documents
-  }).then(loadCOuntriesNames).then(()=> setTimeout(() => { this.isLoading = !this.isLoading }, 500));
+  }).then(loadCOuntriesNames).then(()=> setTimeout(() => { this.isLoading = false }, 500));
 }
 
 function loadCOuntriesNames(docs){
@@ -154,5 +166,13 @@ function loadCOuntriesNames(docs){
   }
 
   return documents;
+}
+function mounted(){
+  
+
+  setTimeout(() => {
+    isAdminFunction();
+    this.onChangeFilter()
+  }, 500);
 }
 </script>

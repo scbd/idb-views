@@ -23,7 +23,7 @@ const initState = {
   accountsUrl : 'https://accounts.cbd.int',
   editUrl     : '',
   countryBaseUrl:'https://rjh.bioland.cbddev.xyz/biodiversity-day/celebrations',
-  year        : '',
+  year        : new Date().getFullYear(),
   debug       : false,
   country     : '',
   order       : []
@@ -39,7 +39,7 @@ async function loadOptions(options = {}){
   const   id                    = makeId({ ...options.value, view });
 
   if(!views.includes(view))                     throw new Error(`IdbViews: Error unknown view passed in options "${view}"`);
-  if(yearRequiredViews.includes(view) && !year) throw new Error(`IdbViews: Error year is required to be passed in widget options for view: "${view}"`);
+  // if(yearRequiredViews.includes(view) && !year) throw new Error(`IdbViews: Error year is required to be passed in widget options for view: "${view}"`);
 
   this.$patch({ ...options.value, view, apiUrl, id } );
 

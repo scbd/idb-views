@@ -9,33 +9,36 @@
                 </div>
             </div>
 
-            <div class="card-body">
+            <div class="card-body px-1">
                 <div class="container-fluid">
                     <div class="row">
-                        <div v-if="doc?.image?.contentUrl" class="col-12 col-sm-3 col-md-3 col-lg-3 p-0"> 
-                            <img :src="doc.image.contentUrl" class="img-thumbnail border-top-0 float-left p-0 m-0" :alt="t(doc.image.caption)" style="border: 0px ;">
+
+                        <YouTube v-if="youTube" :url="youTube.contentUrl" :title="youTube.title" class="col-12 col-sm-3 col-md-3 col-lg-3 p-0"/>
+
+                        <div v-if="!youTube && doc?.image?.contentUrl" class="col-12 col-sm-3 col-md-3 col-lg-3 p-0"> 
+                            <img :src="doc.image.contentUrl" class="img-thumbnail border-top-0 float-left p-0 m-0" :alt="t(doc.image.caption)" style="border: 0px ; width:100%;">
                         </div>
 
-                        <div class="col-12 col-sm-9 col-md-9 col-lg-9"> 
+                        <div class="col-12 " :class="{'col-sm-9 col-md-9 col-lg-9':youTube || doc?.image?.contentUrl}"> 
                         <a v-if="options.editUrl && isAdmin" :href="`${options.editUrl}?identifier=${doc._id}`" target="_blank"  rel="noopener noreferrer">
                             <Icon name="edit" class="float-right"/>
                         </a>
-                        <h3 v-if="doc.name && doc.type.identifier=='headliner'" class="headliner-name">{{ t(doc.name) }}</h3>
-                        <h5 v-if="doc.type.identifier=='cop-presidencies'" class="cop">
-                            <span v-if="doc.name.en">{{ t(doc.name) }}: {{doc.creator.worksFor.country.name}}</span>
-                            <span v-if="!doc.name.en">{{ t('COP Presidency') }}: {{doc.creator.worksFor.country.name}}</span>
+                        <h3 v-if="doc?.name && doc?.type?.identifier=='headliner'" class="headliner-name">{{ t(doc.name) }}</h3>
+                        <h5 v-if="doc?.type?.identifier=='cop-presidencies'" class="cop">
+                            <span v-if="doc?.name?.en">{{ t(doc.name) }}: {{doc.creator.worksFor.country.name}}</span>
+                            <span v-if="!doc?.name?.en">{{ t('COP Presidency') }}: {{doc.creator.worksFor.country.name}}</span>
                             <img :src="doc.creator.worksFor.country.image" class="img-thumbnail border-top-0 float-right" :alt="doc.creator.worksFor.country.name" style="border: 0px; max-height:30px">
                         </h5>
-                        <h5 v-if="doc.type.identifier=='8830904C-8AF4-4C2F-AADB-363D98D854DA'" class="cop">
+                        <h5 v-if="doc?.type?.identifier=='8830904C-8AF4-4C2F-AADB-363D98D854DA'" class="cop">
                             <span>{{doc.creator.worksFor.country.name}}</span>
                             <img :src="doc.creator.worksFor.country.image" class="img-thumbnail border-top-0 float-right" :alt="doc.creator.worksFor.country.name" style="border: 0px; max-height:30px">
                         </h5>
-                        <h5 v-if="!nonOrgs.includes(doc.type.identifier)" class="cop">
-                            <span>{{ t(doc.creator.worksFor.name) }}</span>
+                        <h5 v-if="!nonOrgs.includes(doc?.type?.identifier)" class="cop">
+                            <span>{{ t(doc?.creator?.worksFor?.name) }}</span>
                         </h5>
-                        <p class="card-text cbd-text">{{ t(doc.creator.name) }}, <span v-if="doc?.creator?.jobTitle">{{ t(doc.creator.jobTitle) }}</span></p>
+                        <p class="card-text cbd-text">{{ t(doc?.creator?.name) }}<span v-if="doc?.creator?.jobTitle">, {{ t(doc.creator.jobTitle) }}</span></p>
 
-                        <p v-if="doc.commentText" class="card-text cbd-text">{{ t(doc.commentText) }}</p>
+                        <p v-if="doc?.commentText" class="card-text cbd-text">{{ t(doc.commentText) }}</p>
 
                         <p>
                             <span v-for="(attachment,index) in doc.attachments" v-bind:key="index">
@@ -60,6 +63,13 @@
                 </div>
             </div>
 
+            <!-- <div class="card-footer">
+                <div class="row">
+                    <div class="col-12">
+                        <pre>{{doc}}</pre>
+                    </div>
+                </div>
+            </div> -->
             <!-- hack css not rendering in slot bug -->
             <div v-show="false" class="btn-group btn-group-sm" role="group" >
                 <a  class="btn btn-primary btn-sm" href="#" type="button" target="_blank">  </a> 
@@ -70,14 +80,15 @@
 </template>
 
 <script>
-    import { toRef  } from 'vue-demi';
+    import { toRef  } from 'vue';
     import   isAdmin  from '@/composables/is-admin.js';
     import   t        from '@/composables/i18n.js';
     import   Icon     from '@/components/Icon.vue';
+    import   YouTube     from '@/components/you-tube.vue';
 
     export default {
         name      : 'IdbMessage',
-        components: { Icon },
+        components: { Icon, YouTube },
         props     : {   options  : { type: Object, required: true },
                         document : { type: Object, required: true },
                         hasSlots : { type: Boolean, default: () => false }
@@ -92,6 +103,24 @@
         const   setUpFunctions = { t,  isAdmin };
         const   nonOrgs        = [ 'headliner', '8830904C-8AF4-4C2F-AADB-363D98D854DA', 'cop-presidencies' ];
 
-        return { doc, hasSlots, options, nonOrgs,  ...setUpFunctions };
+
+        const youTube = getYouTube(doc.value.attachments);
+
+        // console.log('youTube', youTube)
+
+        return { youTube, doc, hasSlots, options, nonOrgs,  ...setUpFunctions };
+    }
+
+    function getYouTube(attachments = []){
+        if(!attachments?.length) return null;
+
+        const youTube = attachments.find(({ contentUrl }) => contentUrl.includes('youtube.com'));
+
+        if(!youTube) return null;
+
+        const { contentUrl, name } = youTube;
+        const { en:title } = name;
+
+        return { contentUrl, title };
     }
 </script>

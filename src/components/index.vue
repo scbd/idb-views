@@ -7,7 +7,7 @@
 
 <script>
 
-import { toRef, ref, defineAsyncComponent } from 'vue-demi';
+import { toRef, ref, defineAsyncComponent } from 'vue';
 
 import { useI18n            } from 'vue-i18n';
 import { initializeApiStore } from '@scbd-chm/cached-apis';
@@ -45,6 +45,11 @@ const checkAuth =  (user) => async (mutation) => {
   const me = useMeStore();
 
   user.value = await me.getUser();
+
+  if(user.value?.userID && user.value.userID !== 1) return;
+
+  setTimeout(async ()=>user.value = await me.getUser(), 500);
+  setTimeout(async ()=>user.value = await me.getUser(), 1500);
 }
 
 

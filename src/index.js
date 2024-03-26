@@ -1,6 +1,6 @@
 import   component     from '@/index.vue'
 import   i18nOptions   from '@/locales'
-import { pascalCase  } from 'change-case'
+import { pascalCase } from 'change-case'
 import { name        } from '../package.json'
 
 const NAME = pascalCase(name.replace('@scbd', 'SCBD'))
