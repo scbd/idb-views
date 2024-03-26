@@ -104,22 +104,23 @@
         const   nonOrgs        = [ 'headliner', '8830904C-8AF4-4C2F-AADB-363D98D854DA', 'cop-presidencies' ];
 
 
-        const youTube = getYouTube(doc.value.attachments);
+        const youTube = getYouTube(doc);
 
         // console.log('youTube', youTube)
 
         return { youTube, doc, hasSlots, options, nonOrgs,  ...setUpFunctions };
     }
 
-    function getYouTube(attachments = []){
+    function getYouTube(doc){
+        const attachments = [doc.value.image || {},...(doc.value.attachments||[])];
         if(!attachments?.length) return null;
 
-        const youTube = attachments.find(({ contentUrl }) => contentUrl.includes('youtube.com'));
+        const youTube = attachments.find(({ contentUrl }) => contentUrl?.includes('youtube.com') || contentUrl?.includes('youtu.be'));
 
         if(!youTube) return null;
 
-        const { contentUrl, name } = youTube;
-        const { en:title } = name;
+        const { contentUrl, name, caption } = youTube;
+        const { en:title } = name || caption;
 
         return { contentUrl, title };
     }
