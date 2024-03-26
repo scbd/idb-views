@@ -1,0 +1,117 @@
+  /*
+  load dependant scss all under components #id
+  */
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+
+  #idb-views {
+    @import '@scbd/www-css/dist/scss/import';
+    @import '@scbd/www-css/dist/scss/bs/alert';
+    @import '@scbd/www-css/dist/scss/bs/badge';
+    @import '@scbd/www-css/dist/scss/bs/button-group';
+    @import '@scbd/www-css/dist/scss/bs/buttons';
+    @import '@scbd/www-css/dist/scss/bs/utilities';
+    @import '@scbd/www-css/dist/scss/bs/type';
+    @import '@scbd/www-css/dist/scss/bs/grid';
+    ::placeholder {
+      color: rgb(117, 117, 117);
+      font-size: 14px;
+      opacity: .6;
+      font-family: "BenchNine", sans-serif;
+    }
+    font-family: 'BenchNine', sans-serif;
+
+    .debug{ border: solid 1px red;}
+
+    .cbd-text{
+      font-family: BenchNine,sans-serif;
+      font-size: 1rem !important;
+      letter-spacing: .025em !important;
+      line-height: 1.4 !important;
+      color: #00483a !important;
+      font-weight: 400 !important;
+    }
+    .headliner-name{
+      font-family: BenchNine,sans-serif;
+      letter-spacing: .025em;
+      color: #009b48 !important;
+      /* font-size: 20px !important; */
+      font-weight: 500;
+    }
+    .fade {
+      opacity: .9;
+      transition: opacity .15s linear;
+  }
+    .help-message {
+      // position: absolute;
+      // bottom: calc(-1.2 * 1em);
+      padding-left: 5px;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .badge-warning {
+      color: #1d1d1d;
+      background-color: #ffc107;
+    }
+    .badge-error {
+      color: white;
+      background-color: red;
+    }
+    .row{ display: flex; align-items: center;}
+    .cop{
+      color: #00483a !important;
+      font-weight: 700;
+    }
+
+    .chm-icon-email { width: 1em !important; margin-bottom:5px; }
+    .chm-icon-menu { width: 1.6em !important; }
+    .chm-icon-close { font-size: 1.1em !important; }
+    .chm-icon-map { width: 1.28125em !important; }
+    .icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      stroke-width: 0;
+      stroke: currentColor;
+      fill: currentColor;
+    }
+    .chm-icon {
+      display     : inline-block;
+      width       : 1em;
+      height      : 1em;
+      stroke-width: 0;
+      stroke      : currentColor;
+      /* fill        : currentColor; */
+    }
+    .global{
+      letter-spacing: .025em !important;
+      color: #009b48 !important;
+      font-size: 1.75rem !important;
+      margin-bottom: 0.5rem !important;
+      font-family: inherit !important;
+      font-weight: 500 !important;
+      line-height: 1.2 !important;
+    }
+    .headliner-name{
+      font-family: BenchNine,sans-serif;
+      letter-spacing: .025em;
+      color: #009b48 !important;
+      /* font-size: 20px !important; */
+      font-weight: 500;
+    }
+    .type-header{
+      color: #009b48 !important;
+  
+      font-weight: 500;
+      letter-spacing: .7px;
+    }
+    .headliner-name{
+      font-family: BenchNine,sans-serif;
+      letter-spacing: .025em;
+      color: #009b48 !important;
+      /* font-size: 20px !important; */
+      font-weight: 500;
+  }
+  }
