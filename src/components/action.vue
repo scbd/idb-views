@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { toRef    } from 'vue-demi';
+import { toRef    } from 'vue';
 import { dtFormat } from '@/composables/date-formats.js';
 import   Icon       from './Icon.vue';
 import   isAdmin    from '@/composables/is-admin.js';
@@ -81,6 +81,7 @@ function setup(props){
     const   hasSlots       = toRef(props, 'hasSlots');
     const   options        = toRef(props, 'options');
     const   setUpFunctions = { t,  dtFormat, isAdmin };
+
 
     return { doc, hasSlots, options,  ...setUpFunctions };
 }

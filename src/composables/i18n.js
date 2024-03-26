@@ -19,5 +19,6 @@ export default (target)=>{
 function ensureValidLString({ locale }, target){
     if(isPlainObject(target) && (target[locale] || target['en'])) return true;
     
-    throw new Error(`@scbd/idb-views.composable.i18n: target translation not a string or lString`);
+    return false
+   // throw new Error(`@scbd/idb-views.composable.i18n: target translation not a string or lString`);
 }

@@ -19,7 +19,7 @@
     <script type="importmap-shim" src="http://localhost:5000/preview/import-map.json"></script>
     
     <script type="module-shim" >
-      import { createApp   } from 'vue-demi';
+      import { createApp   } from 'vue';
       import { createI18n  } from 'vue-i18n';
       import { createPinia } from 'pinia';
       import   component, { i18n }   from '@scbd/idb-views';
@@ -58,8 +58,9 @@
 ]
 
 const options = { 
-                    view       : 'IdbMessagesAdmin',
+                    view       : 'IdbActionsAdmin',
                     year       : 2023,
+                    country: 'ca',
                     baseApiUrl : 'https://api.cbddev.xyz/api/',
                     accountsUrl: 'https://accounts.cbddev.xyz',
                     editUrl    : 'https://rjh.bioland.cbddev.xyz/about',

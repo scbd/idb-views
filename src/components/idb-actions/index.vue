@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { toRef        , ref, unref } from 'vue-demi';
+import { toRef        , ref, unref } from 'vue';
 import { listDocuments }             from '@/composables/api.js';
 import   Action                      from '@/components/action.vue';
 import   Loading                     from '@/components/Loading.vue';

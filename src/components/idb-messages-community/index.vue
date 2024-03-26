@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { toRef        , ref, unref } from 'vue-demi';
+import { toRef        , ref, unref } from 'vue';
 import { lookUp        , getData   } from '@scbd-chm/cached-apis';
 import { listDocuments             } from '@/composables/api.js';
 

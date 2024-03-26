@@ -48,7 +48,7 @@ function onRequestMeEvent(element){
   window.document.addEventListener('$requestMe', () => this.dispatchUser(element))
 }
 
-function isAdmin({ admins } = { admins: [] }){
+function isAdmin({ admins } = { admins: [ 'Administrator', 'idb-admin' ]}){
   if(!Array.isArray(admins) || !Array.isArray(this.roles) ) return false
 
   return !!intersect(this.roles, admins).length
